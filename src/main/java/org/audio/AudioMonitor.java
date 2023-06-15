@@ -14,7 +14,7 @@ import javax.sound.sampled.LineUnavailableException;
  *      it starts processing the audio as required
  */
 public class AudioMonitor {
-    private static final double THRESHOLD_ATTACK = 0.2;             // Treshold to activate the processing
+    private static final double THRESHOLD_ATTACK = 0.18;             // Treshold to activate the processing
     private static final double THRESHOLD_RELEASE = 0.05;           // Treshold of silence to stop processing
     private static final double MIN_SILENCE_DURATION = 1;           // Minimum duration of silence to stop recording
 
