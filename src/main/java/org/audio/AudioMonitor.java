@@ -7,6 +7,11 @@ import be.tarsos.dsp.io.jvm.AudioDispatcherFactory;
 
 import javax.sound.sampled.LineUnavailableException;
 
+/**
+ * @DESCRIPTION:
+ *      This class monitors input audio
+ *      and starts recording once the input-level exceeds a treshold
+ */
 public class AudioMonitor {
     private static final double THRESHOLD = 0.1; // Adjust the threshold as needed
 
