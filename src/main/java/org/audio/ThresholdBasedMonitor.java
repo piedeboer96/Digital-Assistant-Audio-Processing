@@ -13,12 +13,12 @@ import javax.sound.sampled.LineUnavailableException;
  *      once it exceeds a pre-defined threshold
  *      it starts processing the audio as required
  */
-public class AudioMonitor {
-    private static final double THRESHOLD_ATTACK = 0.2;             // Treshold to activate the processing
-    private static final double THRESHOLD_RELEASE = 0.05;           // Treshold of silence to stop processing
+public class ThresholdBasedMonitor {
+    private static final double THRESHOLD_ATTACK = 0.2;             // Threshold to activate the processing
+    private static final double THRESHOLD_RELEASE = 0.05;           // Threshold of silence to stop processing
     private static final double MIN_SILENCE_DURATION = 1;           // Minimum duration of silence to stop recording
 
-    private boolean recordingStarted; // Flag indicating if the recording has started
+    private boolean recordingStarted;   // Flag indicating if the recording has started
     private long silenceStartTimestamp; // Timestamp when the silence started
 
     public static void main(String[] args) throws LineUnavailableException {
@@ -52,8 +52,6 @@ public class AudioMonitor {
                 if (recordingStarted) {
                     // Perform recording operations
                     writeAudioToFile(audioBuffer);
-//                    writeAudioToFile(audioBuffer);
-                    VisualizeLevel.visualizeLevel(maxAmplitude);  // Update the volume level visualization
                 }
 
                 return true;
@@ -62,6 +60,7 @@ public class AudioMonitor {
             @Override
             public void processingFinished() {
                 // No additional processing required
+                System.out.println("No additional stuff required...");
             }
         };
 
@@ -98,6 +97,7 @@ public class AudioMonitor {
                 silenceStartTimestamp = currentTimestamp;
             } else if (currentTimestamp - silenceStartTimestamp >= MIN_SILENCE_DURATION * 1000) {
                 // Stop recording
+                System.out.println("WE STOP STOP STOP");
                 recordingStarted = false;
                 stopRecording();
             }
@@ -112,7 +112,7 @@ public class AudioMonitor {
         // This method will be called once, when the recording stops
         System.out.println("Recording stopped");
 
-        //TODO:
-        // -- stop the program
+        // Exit the program
+        System.exit(0);
     }
 }
