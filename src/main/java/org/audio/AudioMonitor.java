@@ -9,9 +9,11 @@ import javax.sound.sampled.LineUnavailableException;
 
 /**
  * @DESCRIPTION:
- *      This class monitors input audio.,
- *      once it exceeds a pre-defined threshold
- *      it starts processing the audio as required
+ *      This class monitors input audio.
+ *      once it exceeds a pre-defined threshold (=THRESHOLD_ATTACK)
+ *      it starts processing the audio as required (e.g. using SPEECH RECOGNITION)
+ *      it keeps processing the text
+ *      until the TRESHOLD_RELEASE, it was lower than this value for MIN_SILENCE_DURATION
  */
 public class AudioMonitor {
     private static final double THRESHOLD_ATTACK = 0.18;             // Treshold to activate the processing
@@ -28,7 +30,7 @@ public class AudioMonitor {
 
     public void startMonitoring() throws LineUnavailableException {
         // Create an AudioDispatcher to process audio
-        AudioDispatcher dispatcher = AudioDispatcherFactory.fromDefaultMicrophone(44100, 4096, 0);
+        AudioDispatcher dispatcher = AudioDispatcherFactory.fromDefaultMicrophone(16000, 4096, 0);
 
         // Create an AudioProcessor to monitor the audio input and start recording
         AudioProcessor audioProcessor = new AudioProcessor() {

@@ -11,7 +11,7 @@ public class SpeechRecognizer {
             // Define the Python script command
             String[] cmd = {
                 "python",
-                "/Users/lorispodevyn/Documents/JavaBook/SpeechRecognition/python/SR.py", // The path to the Python script
+                "python/SR.py", // The path to the Python script
                 audioFilePath
             };
 
