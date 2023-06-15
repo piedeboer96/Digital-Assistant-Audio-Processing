@@ -1,3 +1,5 @@
+package org.javapython;
+
 import java.io.*;
 
 public class SpeechRecognizer {
@@ -9,7 +11,7 @@ public class SpeechRecognizer {
             // Define the Python script command
             String[] cmd = {
                 "python",
-                "/Users/lorispodevyn/Documents/JavaBook/Project_2-2/JavaAndPython/SR.py", // The path to the Python script
+                "/Users/lorispodevyn/Documents/JavaBook/SpeechRecognition/python/SR.py", // The path to the Python script
                 audioFilePath
             };
 
