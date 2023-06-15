@@ -1,4 +1,3 @@
-
 package org.javapython;
 
 import javax.sound.sampled.*;
@@ -60,7 +59,7 @@ public class AudioRecorder {
         System.out.println("Recording finished.");
     }
 
-    public static <SpeechRecognizer> void main(String[] args) {
+    public static void main(String[] args) {
         final AudioRecorder recorder = new AudioRecorder();
 
         // Creates a new thread that waits for a specified
@@ -85,4 +84,3 @@ public class AudioRecorder {
         recorder.start();
     }
 }
-

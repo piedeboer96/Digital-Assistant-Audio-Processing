@@ -4,6 +4,7 @@ import be.tarsos.dsp.AudioDispatcher;
 import be.tarsos.dsp.AudioEvent;
 import be.tarsos.dsp.AudioProcessor;
 import be.tarsos.dsp.io.jvm.AudioDispatcherFactory;
+import org.javapython.SpeechRecognizer;
 
 import javax.sound.sampled.LineUnavailableException;
 
@@ -19,6 +20,9 @@ public class AudioMonitor {
     private static final double THRESHOLD_ATTACK = 0.18;             // Treshold to activate the processing
     private static final double THRESHOLD_RELEASE = 0.05;           // Treshold of silence to stop processing
     private static final double MIN_SILENCE_DURATION = 1;           // Minimum duration of silence to stop recording
+
+    private static SpeechRecognizer recognizer = new SpeechRecognizer(); // Create an instance of SpeechRecognizer
+
 
     private boolean recordingStarted; // Flag indicating if the recording has started
     private long silenceStartTimestamp; // Timestamp when the silence started
@@ -113,6 +117,10 @@ public class AudioMonitor {
         // Perform any cleanup or finalization required for recording
         // This method will be called once, when the recording stops
         System.out.println("Recording stopped");
+
+        System.out.println("Transcribing the audio file...");
+        String transcribedText = recognizer.transcribe(AUDIO_FILE_PATH);
+        System.out.println("Transcription: " + transcribedText);
 
         //TODO:
         // -- stop the program
