@@ -12,6 +12,7 @@ public class VisualizeLevel {
     private static JPanel panel;
 
     public static void visualizeLevel(double level) {
+
         SwingUtilities.invokeLater(() -> {
             if (frame == null) {
                 createAndShowGUI();
