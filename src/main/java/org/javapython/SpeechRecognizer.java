@@ -34,6 +34,9 @@ public class SpeechRecognizer {
             while ((line = reader.readLine()) != null) {
                 transcribedText += line + "\n";
             }
+
+            System.out.println("Transcription: " + transcribedText);
+
             reader.close();
 
             // Wait for the subprocess to finish

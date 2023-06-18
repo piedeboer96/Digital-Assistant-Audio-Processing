@@ -37,9 +37,17 @@ public class SoundLevelDetector {
     long silenceCounter = 0;
 
     public void monitorMicAudio() {
+
+        // TODO:
+        //  - LOAD YOUR FAVOURITE THE MODEL
+
+        // Load a SpeechRecognizer model
+        sr = new SpeechRecognizer();
+
+        // sr.loadModel()
+
         try {
 
-            // Load a SpeechRecognizer model
 
             // Recorded material to analyze using SR
             ArrayList<float[]> recordedBuffers = new ArrayList<>();
@@ -90,12 +98,13 @@ public class SoundLevelDetector {
                             System.out.println("First rec done..");
                             iteration=0;
                             firstRec=false;
+                            sr.transcribe("out16.wav");
 
                             //TODO:
                             //  -- transcribe
 
                         } catch (IOException e) {
-                            // TODO Auto-generated catch block
+
                             e.printStackTrace();
                         }
                     }
