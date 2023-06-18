@@ -34,20 +34,20 @@ public class DynamicRangeGate {
      */
     public float[] process(float[] buffer) {
         double level = spl.soundPressureLevel(buffer);
-        System.out.println(level);
+        //System.out.println(level);
         //System.out.println("level: " + level);
 
         if (level > threshold) {
             // Gate is open
             gateOpenTime = System.currentTimeMillis();
-            System.out.println("open");
+            //System.out.println("open");
             return buffer;
         } else if (System.currentTimeMillis() - gateOpenTime < releaseTimeMs) {
             // Gate is still within the release time
-            System.out.println("release");
+            //System.out.println("release");
             return buffer;
         } else {
-            System.out.println("close");
+            //System.out.println("close");
             return zeroBuffer; // Return the zero buffer when release time is over
         }
     }

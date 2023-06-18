@@ -5,7 +5,7 @@ import be.tarsos.dsp.AudioDispatcher;
 import be.tarsos.dsp.AudioEvent;
 import be.tarsos.dsp.AudioProcessor;
 import be.tarsos.dsp.io.jvm.AudioDispatcherFactory;
-import org.javapython.SpeechRecognizer;
+import org.javapython.SpeechRecognizerV2;
 
 import javax.sound.sampled.*;
 import java.io.IOException;
@@ -21,11 +21,14 @@ public class SoundLevelDetector {
     private static final int BLOCK_SIZE = 1024;
 
     // LoPie Audio Suite
-    DynamicRangeGate gate = new DynamicRangeGate(-60, 1000, 16000);
+    DynamicRangeGate gate = new DynamicRangeGate(-50, 1000, 16000);
     Converter cnv = new Converter();
 
+    // Flushed Buffer
+    List<float[]> flushedBuffer = new ArrayList<>();
+
     // SpeechRecognition Model
-    SpeechRecognizer sr;
+    SpeechRecognizerV2 sr;
 
     // ZeroBuffer for comparison
     float[] silenceBuffer = new float[1024];
@@ -38,17 +41,10 @@ public class SoundLevelDetector {
 
     public void monitorMicAudio() {
 
-        // TODO:
-        //  - LOAD YOUR FAVOURITE THE MODEL
-
         // Load a SpeechRecognizer model
-        sr = new SpeechRecognizer();
-
-        // sr.loadModel()
+        sr = new SpeechRecognizerV2();
 
         try {
-
-
             // Recorded material to analyze using SR
             ArrayList<float[]> recordedBuffers = new ArrayList<>();
 
@@ -61,7 +57,6 @@ public class SoundLevelDetector {
             // Use AudioDispatcher for block size 1024
             int overlap = 0;
             AudioDispatcher dispatcher = AudioDispatcherFactory.fromDefaultMicrophone(BLOCK_SIZE, overlap);
-
 
             // Measure the loudness using a processor and display in real-time
             dispatcher.addAudioProcessor(new AudioProcessor() {
@@ -80,7 +75,7 @@ public class SoundLevelDetector {
                     // Append the recorded list
                     recordedBuffers.add(Arrays.copyOf(processedBuffer, processedBuffer.length));
 
-                    // init.
+                    // init
                     if(processedBuffer[0]!=0){
                         firstRec=true;
                         System.out.println("activated");
@@ -91,28 +86,22 @@ public class SoundLevelDetector {
                         iteration++;
                     }
 
-
                     if(iteration>10){
                         try {
+
+                            // TODO:
+                            // - trim pre_post silence
                             cnv.makeWAV(recordedBuffers);
                             System.out.println("First rec done..");
                             iteration=0;
                             firstRec=false;
                             sr.transcribe("out16.wav");
-
-
-                            //TODO:
-                            // --- transcribe
-                            // --- flush the buffer
-                            // --- load the model once
-                            //  --
+                            recordedBuffers = flushedBuffer;
 
                         } catch (IOException e) {
-
                             e.printStackTrace();
                         }
                     }
-
 
                     return true;
                 }
@@ -129,8 +118,14 @@ public class SoundLevelDetector {
         }
     }
 
+    public void close() {
+        sr.close();
+    }
+
     public static void main(String[] args) {
         SoundLevelDetector detector = new SoundLevelDetector();
         detector.monitorMicAudio();
+        // make sure to close the speech recognizer at the end
+        Runtime.getRuntime().addShutdownHook(new Thread(detector::close));
     }
 }
