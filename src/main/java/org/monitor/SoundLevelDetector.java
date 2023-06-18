@@ -6,7 +6,7 @@ import be.tarsos.dsp.AudioEvent;
 import be.tarsos.dsp.AudioProcessor;
 import be.tarsos.dsp.io.jvm.AudioDispatcherFactory;
 import org.javapython.SpeechRecognizer;
-import org.javapython.TranscriptionService;
+
 import javax.sound.sampled.*;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,11 +26,16 @@ public class SoundLevelDetector {
     // ZeroBuffer for comparison
     float[] silenceBuffer = new float[1024];
 
+    // Activated
+    boolean firstRec = false;
+
+    // Silence counter
+    long silenceCounter =0;
+
     public void monitorMicAudio() {
         try {
 
-            // Load Mozilla DeepSpeech Model (because wav2vec is too slow)
-
+            // Load a SpeechRecognizer model
 
             // Recorded material to analyze using SR
             ArrayList<float[]> recordedBuffers = new ArrayList<>();
@@ -44,6 +49,7 @@ public class SoundLevelDetector {
             // Use AudioDispatcher for block size 1024
             int overlap = 0;
             AudioDispatcher dispatcher = AudioDispatcherFactory.fromDefaultMicrophone(BLOCK_SIZE, overlap);
+
 
             // Measure the loudness using a processor and display in real-time
             dispatcher.addAudioProcessor(new AudioProcessor() {
@@ -62,48 +68,34 @@ public class SoundLevelDetector {
                     // Append the recorded list
                     recordedBuffers.add(Arrays.copyOf(processedBuffer, processedBuffer.length));
 
-                    iteration++;
-//                    System.out.println("it " + iteration);
-
-                    // Take care of recording... as long as not silent for > 1 sec
-                    // then we transcribe and compare.
-                    while(!Arrays.equals(processedBuffer, silenceBuffer)){
-                        System.out.println("Audio...");
-
+                    // init.
+                    if(processedBuffer[0]!=0){
+                        firstRec=true;
+                        System.out.println("activated");
                     }
 
-                    try {
-                        cnv.makeWAV(recordedBuffers);
-                    } catch (IOException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+                    // stop recording and bounce to wav
+                    if(processedBuffer[0]==0 && firstRec){
+                        iteration++;
                     }
 
-                    if (iteration > 200) {
 
+                    if(iteration>10){
                         try {
-
-                            // convert to WAV
                             cnv.makeWAV(recordedBuffers);
-
-                            // trim silence
-                            // ....
-
-                            // TODO:
-                            // - use a mozilla deepspeech or facebook wav2VEC
-                            // (with python) to transcribe the text in "out16.wav"
-
-
-                            // transcribe
-                            System.out.println("transcript");
-
+                            System.out.println("First rec done..");
                             iteration=0;
-//                            System.exit(0);
+                            firstRec=false;
+
+                            //TODO:
+                            //  -- transcribe
 
                         } catch (IOException e) {
-                            throw new RuntimeException(e);
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
                         }
                     }
+
 
                     return true;
                 }

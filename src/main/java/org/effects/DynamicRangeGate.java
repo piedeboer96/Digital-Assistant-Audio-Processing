@@ -7,6 +7,8 @@ import org.monitor.SoundPressureLevel;
  * with threshold calculated based on dBSPL
  */
 public class DynamicRangeGate {
+
+    public boolean gate_open = false;
     private final int releaseTimeMs;                    // release time
     private final float threshold;                      // threshold
     final float[] zeroBuffer = new float[1024];         // block size 1024
@@ -22,6 +24,7 @@ public class DynamicRangeGate {
     public DynamicRangeGate(float threshold, int releaseTimeMs, int sampleRate) {
         this.threshold = threshold;
         this.releaseTimeMs = releaseTimeMs;
+        this.gate_open = true;
     }
 
     /**
@@ -40,10 +43,10 @@ public class DynamicRangeGate {
             return buffer;
         } else if (System.currentTimeMillis() - gateOpenTime < releaseTimeMs) {
             // Gate is still within the release time
-            //System.out.println("release");
+            System.out.println("release");
             return buffer;
         } else {
-            //System.out.println("close");
+            System.out.println("close");
             return zeroBuffer; // Return the zero buffer when release time is over
         }
     }
