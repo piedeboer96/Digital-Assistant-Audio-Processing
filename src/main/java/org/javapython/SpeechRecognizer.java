@@ -6,18 +6,24 @@ public class SpeechRecognizer {
 
     public String transcribe(String audioFilePath) {
         String transcribedText = "";
+        System.out.println("time to transcribe...");
 
         try {
-            // Define the Python script command
+            // Get the absolute path of the Python script
+            String pythonScriptPath = "/Users/piedeboer/Desktop/SpeechRecognition/git/SpeechRecognition/python/SR.py";
+            //String audioFilePath = "/Users/piedeboer/Desktop/SpeechRecognition/git/SpeechRecognition/out16khz.wav"
+            String pythonExecutablePath = "/usr/local/bin/python3";
+
+            // Create the Python script command with the absolute path and audio file path
             String[] cmd = {
-                "python",
-                "python/SR.py", // The path to the Python script
-                audioFilePath
+                    pythonExecutablePath,
+                    pythonScriptPath,
+                    audioFilePath
             };
 
             // Create a new process builder
             ProcessBuilder processBuilder = new ProcessBuilder(cmd);
-            
+
             // Redirect error stream to avoid deadlocks and consume the output stream from the subprocess
             processBuilder.redirectErrorStream(true);
             Process process = processBuilder.start();

@@ -115,7 +115,6 @@ public class AudioMonitor {
         List<byte[]> audioData = convertFloatBufferListToByteAudioData(recordedBuffers);
         convertToWAV(audioData, outputFile);
 
-
         System.out.println("File written successfully!");
         System.exit(0);
     }

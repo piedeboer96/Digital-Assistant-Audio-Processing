@@ -3,7 +3,7 @@ package org.effects;
 import org.monitor.SoundPressureLevel;
 
 /**
- * Dynamic Range Audio with variable release time
+ * Dynamic Range Gate with variable release time and
  * with threshold calculated based on dBSPL
  */
 public class DynamicRangeGate {
@@ -31,7 +31,7 @@ public class DynamicRangeGate {
      */
     public float[] process(float[] buffer) {
         double level = spl.soundPressureLevel(buffer);
-        System.out.println("level: " + level);
+        //System.out.println("level: " + level);
 
         if (level > threshold) {
             // Gate is open
@@ -40,10 +40,10 @@ public class DynamicRangeGate {
             return buffer;
         } else if (System.currentTimeMillis() - gateOpenTime < releaseTimeMs) {
             // Gate is still within the release time
-            System.out.println("release");
+            //System.out.println("release");
             return buffer;
         } else {
-            System.out.println("close");
+            //System.out.println("close");
             return zeroBuffer; // Return the zero buffer when release time is over
         }
     }
