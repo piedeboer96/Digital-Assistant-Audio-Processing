@@ -88,6 +88,7 @@ public class SoundLevelDetector {
 
                             // TODO:
                             // - (optional) trim pre_post silence
+                            // - (optional) identify speaker
 
                             // Make .WAV from recorded buffers
                             cnv.makeWAV(recordedBuffers);
@@ -100,11 +101,21 @@ public class SoundLevelDetector {
                             // Transcribe
                             String transcribedText = sr.transcribe("out16.wav");
 
-                            // TODO:
-                            //  - identify speaker
+                            // Send text to ChatBot
+
+                            // Ask for response
+                            String chatBotResponse = "Peter, you a great person.";
+
+                            // Generate the .WAV
+
+                            // Play the .WAV, but only continue with the program one second after the .wav finished
+
 
                             conversation.push(transcribedText);
                             recordedBuffers.clear();
+
+                            //
+
 
                         } catch (IOException e) {
                             e.printStackTrace();
