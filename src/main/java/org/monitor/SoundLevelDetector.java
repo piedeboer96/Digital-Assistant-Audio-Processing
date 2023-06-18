@@ -12,11 +12,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Stack;
 
 public class SoundLevelDetector {
 
-    // history of transcribed text
-    List<String> transcriptions = new ArrayList<>();
+    // History of transcribed text
+    Stack<String> conversation = new Stack<>();
 
     private static final int BLOCK_SIZE = 1024;
 
@@ -24,20 +25,14 @@ public class SoundLevelDetector {
     DynamicRangeGate gate = new DynamicRangeGate(-50, 1000, 16000);
     Converter cnv = new Converter();
 
-    // Flushed Buffer
-    List<float[]> flushedBuffer = new ArrayList<>();
-
     // SpeechRecognition Model
     SpeechRecognizerV2 sr;
 
-    // ZeroBuffer for comparison
-    float[] silenceBuffer = new float[1024];
-
-    // Activated
+    // Threshold passed for first ti,e
     boolean firstRec = false;
 
-    // Silence counter
-    long silenceCounter = 0;
+    // Silence counter (extra gate control)
+    long silenceCounter = 10;
 
     public void monitorMicAudio() {
 
@@ -61,8 +56,11 @@ public class SoundLevelDetector {
             // Measure the loudness using a processor and display in real-time
             dispatcher.addAudioProcessor(new AudioProcessor() {
 
+
                 float[] processedBuffer = new float[BLOCK_SIZE];
-                long iteration = 0;
+
+                // Count silence duration additional to gate release
+                long silentIter = 0;
 
                 @Override
                 public boolean process(AudioEvent audioEvent) {
@@ -75,28 +73,39 @@ public class SoundLevelDetector {
                     // Append the recorded list
                     recordedBuffers.add(Arrays.copyOf(processedBuffer, processedBuffer.length));
 
-                    // init
+                    // Activate
                     if(processedBuffer[0]!=0){
                         firstRec=true;
                         System.out.println("activated");
                     }
 
-                    // stop recording and bounce to wav
+                    // Accumulate for stop recording later
                     if(processedBuffer[0]==0 && firstRec){
-                        iteration++;
+                        silentIter++;
                     }
 
-                    if(iteration>10){
+                    if(silentIter>silenceCounter){
                         try {
 
                             // TODO:
-                            // - trim pre_post silence
+                            // - (optional) trim pre_post silence
+
+                            // Make .WAV from recorded buffers
                             cnv.makeWAV(recordedBuffers);
                             System.out.println("First rec done..");
-                            iteration=0;
+
+                            // Reset bookkeeping
+                            silentIter=0;
                             firstRec=false;
-                            sr.transcribe("out16.wav");
-                            recordedBuffers = flushedBuffer;
+
+                            // Transcribe
+                            String transcribedText = sr.transcribe("out16.wav");
+
+                            // TODO:
+                            //  - identify speaker
+
+                            conversation.push(transcribedText);
+                            recordedBuffers.clear();
 
                         } catch (IOException e) {
                             e.printStackTrace();
