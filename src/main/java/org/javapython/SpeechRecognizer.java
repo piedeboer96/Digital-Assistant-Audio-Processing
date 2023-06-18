@@ -10,9 +10,9 @@ public class SpeechRecognizer {
 
         try {
             // Get the absolute path of the Python script
-            String pythonScriptPath = "/Users/piedeboer/Desktop/SpeechRecognition/git/SpeechRecognition/python/SR.py";
+            String pythonScriptPath = "/Users/lorispodevyn/Documents/JavaBook/SpeechRecognition/python/SR2.py";
             //String audioFilePath = "/Users/piedeboer/Desktop/SpeechRecognition/git/SpeechRecognition/out16khz.wav"
-            String pythonExecutablePath = "/usr/local/bin/python3";
+            String pythonExecutablePath = "/opt/homebrew/opt/python@3.10/libexec/bin/python3";
 
             // Create the Python script command with the absolute path and audio file path
             String[] cmd = {

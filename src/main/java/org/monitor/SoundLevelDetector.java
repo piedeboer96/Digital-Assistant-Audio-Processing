@@ -21,7 +21,7 @@ public class SoundLevelDetector {
     private static final int BLOCK_SIZE = 1024;
 
     // LoPie Audio Suite
-    DynamicRangeGate gate = new DynamicRangeGate(-70, 1000, 16000);
+    DynamicRangeGate gate = new DynamicRangeGate(-60, 1000, 16000);
     Converter cnv = new Converter();
 
     // SpeechRecognition Model
@@ -100,8 +100,12 @@ public class SoundLevelDetector {
                             firstRec=false;
                             sr.transcribe("out16.wav");
 
+
                             //TODO:
-                            //  -- transcribe
+                            // --- transcribe
+                            // --- flush the buffer
+                            // --- load the model once
+                            //  --
 
                         } catch (IOException e) {
 

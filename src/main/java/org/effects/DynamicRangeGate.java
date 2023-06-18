@@ -34,6 +34,7 @@ public class DynamicRangeGate {
      */
     public float[] process(float[] buffer) {
         double level = spl.soundPressureLevel(buffer);
+        System.out.println(level);
         //System.out.println("level: " + level);
 
         if (level > threshold) {
