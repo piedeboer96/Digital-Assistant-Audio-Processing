@@ -11,8 +11,12 @@ import javax.sound.sampled.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class SoundLevelDetector {
+
+    // history of transcribed text
+    List<String> transcriptions = new ArrayList<>();
 
     private static final int BLOCK_SIZE = 1024;
 
@@ -30,7 +34,7 @@ public class SoundLevelDetector {
     boolean firstRec = false;
 
     // Silence counter
-    long silenceCounter =0;
+    long silenceCounter = 0;
 
     public void monitorMicAudio() {
         try {
