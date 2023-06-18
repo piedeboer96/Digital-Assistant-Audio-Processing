@@ -1,13 +1,15 @@
-import sys
 import numpy as np
 import torch
 import librosa
 from transformers import Wav2Vec2ForCTC, Wav2Vec2Processor
+from py4j.java_gateway import JavaGateway, CallbackServerParameters
 
 class SpeechRecognizer:
     def __init__(self, model_id):
+        print('Loading model...')
         self.processor = Wav2Vec2Processor.from_pretrained(model_id)
         self.model = Wav2Vec2ForCTC.from_pretrained(model_id)
+        print('Model loaded.')
 
     def transcribe(self, audio_file):
         # Load the audio file
@@ -24,24 +26,12 @@ class SpeechRecognizer:
         # Decode the IDs to get the predicted sentence
         return self.processor.decode(predicted_ids[0])
 
-def main():
-    # Check if file path argument is provided
-    if len(sys.argv) != 2:
-        print("Usage: python script.py [audio_file_path]")
-        sys.exit(1)
-
-    # Define the output file path
-    audio_file_path = sys.argv[1]
-
-    # Define the speech recognizer
-    recognizer = SpeechRecognizer("jonatasgrosman/wav2vec2-large-xlsr-53-english")
-
-    # Transcribe the audio file
-    print("Transcribing the audio file...")
-    predicted_sentence = recognizer.transcribe(audio_file_path)
-
-    # Print the transcribed sentence
-    print("Transcription:", predicted_sentence)
-
 if __name__ == "__main__":
-    main()
+    # Create a Py4J gateway server
+    gateway = JavaGateway(callback_server_parameters=CallbackServerParameters())
+
+    # Expose the SpeechRecognizer class as a Py4J gateway entry point
+    gateway.entry_point.recognizer = SpeechRecognizer("jonatasgrosman/wav2vec2-large-xlsr-53-english")
+
+    # Start the gateway server
+    gateway.start_server()
