@@ -1,0 +1,38 @@
+plugins {
+    id 'java'
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    maven {
+        name = "TarsosDSP repository"
+        url = "https://mvn.0110.be/releases"
+    }
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation 'be.tarsos.dsp:core:2.5'
+    implementation 'be.tarsos.dsp:jvm:2.5'
+    implementation 'com.github.psambit9791:jdsp:2.0.1'
+    // https://mvnrepository.com/artifact/org.python/jython
+    implementation 'org.python:jython:2.7.2'
+    // https://mvnrepository.com/artifact/org.python/jython-standalone
+    implementation 'org.python:jython-standalone:2.7.2'
+    // https://mvnrepository.com/artifact/org.mozilla.deepspeech/libdeepspeech
+    implementation 'org.mozilla.deepspeech:libdeepspeech:0.5.1'
+    // https://mvnrepository.com/artifact/net.sf.jni4net/jni4net.j
+    implementation 'net.sf.jni4net:jni4net.j:0.8.8.0'
+
+
+
+
+}
+
+test {
+    useJUnitPlatform()
+}
